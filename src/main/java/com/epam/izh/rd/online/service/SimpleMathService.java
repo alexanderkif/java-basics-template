@@ -1,5 +1,11 @@
 package com.epam.izh.rd.online.service;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
+
 public class SimpleMathService implements MathService {
 
     /**
@@ -13,7 +19,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int compare(int value1, int value2) {
-        return -2;
+        return Integer.compare(value1, value2);
     }
 
     /**
@@ -22,7 +28,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int maxFrom(int value1, int value2) {
-        return -1;
+        return Math.max(value1, value2);
     }
 
     /**
@@ -31,7 +37,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int maxFrom(int[] values) {
-        return -1;
+        return Arrays.stream(values).max().orElse(-1);
     }
 
     /**
@@ -40,7 +46,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int sum(int[] values) {
-        return -1;
+        return Arrays.stream(values).sum();
     }
 
     /**
@@ -49,7 +55,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] getEvenDigits(int[] values) {
-        return new int[]{};
+        return Arrays.stream(values).filter(el -> el % 2 == 0).toArray();
     }
 
     /**
@@ -59,7 +65,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public long calcFactorial(int initialVal) {
-        return -1L;
+        return LongStream.rangeClosed(1, initialVal).reduce(1, (long x, long y) -> x * y);
     }
 
     /**
@@ -74,7 +80,11 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public long calcFibonacci(int number) {
-        return -1L;
+        return Stream.iterate(new long[]{0, 1}, arr -> new long[]{arr[1], arr[0]+ arr[1]})
+                .limit(number)
+                .map(y -> y[1])
+                .reduce((first, second) -> second)
+                .orElse(0L);
     }
 
     /**
@@ -83,7 +93,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] sort(int[] values) {
-        return new int[]{};
+        return Arrays.stream(values).sorted().toArray();
     }
 
     /**
@@ -94,7 +104,8 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public boolean isPrimary(int number) {
-        return false;
+        BigInteger bigInteger = BigInteger.valueOf(number);
+        return bigInteger.isProbablePrime((int) Math.log(number));
     }
 
     /**
@@ -104,6 +115,8 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] reverseArray(int[] values) {
-        return new int[]{};
+        return IntStream.rangeClosed(1, values.length)
+                .map(i -> values[values.length - i])
+                .toArray();
     }
 }
